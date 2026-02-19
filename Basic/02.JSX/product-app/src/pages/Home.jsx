@@ -8,6 +8,13 @@ const Home = () => {
     // view 라는 이름의 상태 정의
     const [view, setview] = useState("detail")
 
+    // 관련상품 리스트
+    const productList = [
+        { id: 1, name: "20인치 모니터" , price: 100000 },
+        { id: 2, name: "24인치 모니터" , price: 200000 },
+        { id: 3, name: "30인치 모니터" , price: 300000 }
+    ]
+
   return (
     <div>
         <h1>상품 페이지</h1>
@@ -32,7 +39,18 @@ const Home = () => {
         }
         {
             view === "related" && (
-                <h2>관련 상품 목록</h2>
+                <>
+                    <h2>관련 상품 목록</h2>
+                    <ul>
+                        {
+                            productList.map((item) => (
+                                <li key={item.id}>
+                                    {item.name} - {item.price}
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </>
             )
         }
     </div>
