@@ -1,0 +1,42 @@
+import React, { useState } from 'react'
+
+const Home = () => {
+
+    // 변수
+    // const view = "detail"
+
+    // view 라는 이름의 상태 정의
+    const [view, setview] = useState("detail")
+
+  return (
+    <div>
+        <h1>상품 페이지</h1>
+        <div>
+            <button onClick={ () => setview("detail") }>
+                상품 상세
+            </button>
+            <button onClick={ () => setview("related") }>
+                관련 상품
+            </button>
+        </div>
+
+        {/* 조건부 렌더링 */}
+        {
+            view === "detail" && (
+                <div>
+                    <h2>세로 모니터</h2>
+                    <p>가로 세로 토글이 되는 디자인</p>
+                    <h3>322,000원</h3>
+                </div> 
+            )
+        }
+        {
+            view === "related" && (
+                <h2>관련 상품 목록</h2>
+            )
+        }
+    </div>
+  )
+}
+
+export default Home
