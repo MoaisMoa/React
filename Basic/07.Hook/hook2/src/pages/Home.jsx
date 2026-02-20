@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import TodoItem from '../components/TodoItem'
 import { useMemo } from 'react'
 import { useCallback } from 'react'
+import { useRef } from 'react'
 
 const Home = () => {
     //State 선언 
@@ -63,7 +64,8 @@ const Home = () => {
     //     setTodos(newTodos)
     //     setText("")
     // }
-    // - 할 일 추가 (ver.useCallback)
+    // - 할 일 추가 (ver.useCallback + useRef()사용)
+    const inputRef = useRef(null); // useRef
     const handleAdd = useCallback(() => {
         // 입력 값이 없으면 추가 X
         if (!text.trim()) return
@@ -72,7 +74,12 @@ const Home = () => {
         setTodos(
             prev => [ ...prev, {id: Date.now(), text: text, completed: false }]
         );
+
+        // 할 일 입력창 비우기
         setText("")
+
+        // 추가 후 입력 창에 포커스 (useRef 사용)
+        inputRef.current.focus()
     }, [text])
 
 
@@ -101,11 +108,13 @@ const Home = () => {
   return (
     <div>
         <h1>Todo List App</h1>
-        <input type="text"
-               placeholder='할 일 입력'
-               value={text}
-               onChange={e => setText(e.target.value)}/>
-        <button onClick={handleAdd}>추가</button>
+            <input
+                ref={inputRef}
+                type="text"
+                placeholder='할 일 입력'
+                value={text}
+                onChange={e => setText(e.target.value)}/>
+            <button onClick={handleAdd}>추가</button>
 
         <br /><br />
 
