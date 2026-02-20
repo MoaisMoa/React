@@ -4,6 +4,8 @@ import TodoItem from '../components/TodoItem'
 import { useMemo } from 'react'
 import { useCallback } from 'react'
 import { useRef } from 'react'
+// UUID
+import { v4 as uuidv4 } from 'uuid';
 
 const Home = () => {
     //State 선언 
@@ -72,7 +74,10 @@ const Home = () => {
 
         // 상태 업데이트
         setTodos(
-            prev => [ ...prev, {id: Date.now(), text: text, completed: false }]
+            //UUID
+            prev => [ ...prev, {id: uuidv4(), text: text, completed: false }]
+            //nanoid
+            // prev => [ ...prev, {id: nanoid(), text: text, completed: false }]
         );
 
         // 할 일 입력창 비우기
