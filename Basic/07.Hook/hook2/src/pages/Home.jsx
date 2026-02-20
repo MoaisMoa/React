@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import TodoItem from '../components/TodoItem'
 import { useMemo } from 'react'
+import { useCallback } from 'react'
 
 const Home = () => {
     //State 선언 
@@ -17,40 +18,62 @@ const Home = () => {
     const [text, setText] = useState("")        // 새로운 할 일 입력
     const [search, setSearch] = useState("")    // 검색어 입력
 
-    // 이벤트 핸들러
+    // ############# 이벤트 핸들러 ##############
 
     // - 할 일 완료 토글
-    const handleToggle = (id) => {
-        const newTodos = todos.map( todo =>
-            todo.id === id ? { ...todo, completed: !todo.completed } : todo
-        )
+    // const handleToggle = (id) => {
+    //     const newTodos = todos.map( todo =>
+    //         todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    //     )
 
-        // 상태 업데이트 : 호출 되는 순간 리렌더링 시키는거얌
-        setTodos ( newTodos )
-    }
+    //     // 상태 업데이트 : 호출 되는 순간 리렌더링 시키는거얌
+    //     setTodos ( newTodos )
+    // }
+    const handleToggle = useCallback((id) => {
+        setTodos(
+            prev => prev.map(todo => todo.id === id ? {...todo, completed: !todo.completed} : todo)
+        );
+    }, []);
 
     // - 할 일 삭제
-    const handleDelete = (id) => {
-        const newTodos = todos.filter(todo => todo.id !== id)
+    // const handleDelete = (id) => {
+    //     const newTodos = todos.filter(todo => todo.id !== id)
 
+    //     // 상태 업데이트
+    //     setTodos(newTodos)
+    // }
+    const handleDelete = useCallback((id) => {
         // 상태 업데이트
-        setTodos(newTodos)
-    }
+        setTodos(
+            prev => prev.filter(todo=> todo.id !== id)
+        )
+    }, [],)
 
     // - 할 일 추가
-    const handleAdd = () => {
+    // const handleAdd = () => {
+    //     // 입력 값이 없으면 추가 X
+    //     if (!text.trim()) return
+
+    //     const newTodos = [
+    //         ...todos,
+    //         { id: Date.now(), text: text, completed: false }
+    //     ]
+
+    //     // 상태 업데이트
+    //     setTodos(newTodos)
+    //     setText("")
+    // }
+    // - 할 일 추가 (ver.useCallback)
+    const handleAdd = useCallback(() => {
         // 입력 값이 없으면 추가 X
         if (!text.trim()) return
 
-        const newTodos = [
-            ...todos,
-            { id: Date.now(), text: text, completed: false }
-        ]
-
         // 상태 업데이트
-        setTodos(newTodos)
+        setTodos(
+            prev => [ ...prev, {id: Date.now(), text: text, completed: false }]
+        );
         setText("")
-    }
+    }, [text])
 
 
     // 할 일 전체 개수 와 완료된 개수
