@@ -1,5 +1,5 @@
 ## 프로젝트 생성
-
+create-vite todo-app --template react
 npm create vite@latest 프로젝트이름 -- --template react
 
 ## 서버 실행
