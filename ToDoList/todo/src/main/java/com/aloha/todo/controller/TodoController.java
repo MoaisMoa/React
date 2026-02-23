@@ -39,8 +39,7 @@ public class TodoController {
   public ResponseEntity<?> getAll(
     @RequestParam(value = "page", defaultValue = "1", required = false) int page,
     @RequestParam(value = "size", defaultValue = "10", required = false) int size,
-    Pagination pagination
-  ) {
+    Pagination pagination) {
       try {
         PageInfo<Todos> pageInfo = todoService.list(page, size);
         pagination.setPage(page);
@@ -108,5 +107,4 @@ public class TodoController {
           return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
   }
-
 }

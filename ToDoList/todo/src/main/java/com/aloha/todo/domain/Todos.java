@@ -12,8 +12,8 @@ public class Todos {
   private String name;          // 할일
   private Boolean status;       // 상태
   private Integer seq;          // 순서
-  private Date createdAt;         // 생성일
-  private Date updatedAt;         // 수정일
+  private Date createdAt;       // 생성일
+  private Date updatedAt;       // 수정일
 
   public Todos() {
     this.id = UUID.randomUUID().toString();
