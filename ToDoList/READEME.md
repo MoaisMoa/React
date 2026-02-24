@@ -15,3 +15,6 @@
 3. App
     - App.css
     - App.jsx
+
+4. 서버 실행
+    - npm run dev

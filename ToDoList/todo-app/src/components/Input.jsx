@@ -2,7 +2,12 @@ import React from 'react'
 
 const Input = () => {
   return (
-    <div>Input</div>
+    <div>
+      <form className='form'>
+        <input type="text" placeholder='할 일 입력' className='input'/>
+        <button type='submit' className='btn'>추가</button>
+      </form>
+    </div>
   )
 }
 

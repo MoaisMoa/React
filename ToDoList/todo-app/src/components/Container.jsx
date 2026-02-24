@@ -6,7 +6,7 @@ import Footer from './Footer'
 
 const Container = () => {
   return (
-    <div>
+    <div className='container'>
       <Header />
       <Input />
       <List />

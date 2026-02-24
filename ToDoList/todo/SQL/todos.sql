@@ -10,3 +10,15 @@ CREATE TABLE `todos` (
 	`created_at`	TIMESTAMP	NOT NULL	DEFAULT current_timestamp	COMMENT '등록일자',
 	`updated_at`	TIMESTAMP	NOT NULL	DEFAULT current_timestamp	COMMENT '수정일자'
 );
+
+-- Sample Data
+TRUNCATE todos;
+
+INSERT INTO `todos` ( id, name, status )
+VALUES
+( UUID(), '할 일 샘플 데이터', true ),
+( UUID(), '할 일 샘플 데이터', true ),
+( UUID(), '할 일 샘플 데이터', false ),
+( UUID(), '할 일 샘플 데이터', false ),
+( UUID(), '할 일 샘플 데이터', true )
+;
