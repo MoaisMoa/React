@@ -1,7 +1,7 @@
 import React from 'react'
 import Card from './Card'
 
-const List = ({ todoList }) => {
+const List = ({ todoList, onToggle, onDelete }) => {
 
   return (
     <div className='todoList'>
@@ -12,7 +12,7 @@ const List = ({ todoList }) => {
           <ul className='initial-list'>
             {
               todoList.map((todo) => (
-                <Card key={todo.id} todo={todo} />
+                <Card key={todo.id} todo={todo} onToggle={onToggle} onDelete={onDelete} />
               ))
             }
           </ul>
