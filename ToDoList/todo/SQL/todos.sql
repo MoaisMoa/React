@@ -16,9 +16,14 @@ TRUNCATE todos;
 
 INSERT INTO `todos` ( id, name, status )
 VALUES
-( UUID(), '할 일 샘플 데이터', true ),
-( UUID(), '할 일 샘플 데이터', true ),
-( UUID(), '할 일 샘플 데이터', false ),
-( UUID(), '할 일 샘플 데이터', false ),
-( UUID(), '할 일 샘플 데이터', true )
+( UUID(), '할 일 샘플 데이터1', true ),
+( UUID(), '할 일 샘플 데이터2', true ),
+( UUID(), '할 일 샘플 데이터3', false ),
+( UUID(), '할 일 샘플 데이터4', false ),
+( UUID(), '할 일 샘플 데이터5', true ),
+( UUID(), '할 일 샘플 데이터6', true ),
+( UUID(), '할 일 샘플 데이터7', true ),
+( UUID(), '할 일 샘플 데이터8', true ),
+( UUID(), '할 일 샘플 데이터9', true ),
+( UUID(), '할 일 샘플 데이터10', true )
 ;
