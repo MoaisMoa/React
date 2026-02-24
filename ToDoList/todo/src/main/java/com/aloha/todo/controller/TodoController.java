@@ -29,9 +29,7 @@ import lombok.extern.slf4j.Slf4j;
     origins = {
     "http://localhost:3000",
     "http://localhost:5173"
-    },
-    allowCredentials = "true",
-    maxAge = 3600
+    }
 )
 @Slf4j
 @RestController
