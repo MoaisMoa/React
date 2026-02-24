@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -110,6 +111,34 @@ public class TodoController {
               return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
           else
               return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+      } catch (Exception e) {
+          return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+  }
+
+  // 전체 완료
+  @PutMapping("/bulk")
+  public ResponseEntity<?> completeAll() {
+      try {
+        boolean result = todoService.completeAll();
+        if(result)
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+      } catch (Exception e) {
+          return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+  }
+
+  // 전체 삭제
+  @DeleteMapping("/bulk")
+  public ResponseEntity<?> deleteAll() {
+      try {
+        boolean result = todoService.deleteAll();
+        if( result )
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
       } catch (Exception e) {
           return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
