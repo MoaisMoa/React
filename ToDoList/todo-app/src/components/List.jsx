@@ -1,12 +1,24 @@
 import React from 'react'
 import Card from './Card'
+import SkeletonCard from './SkeletonCard'
 
-const List = ({ todoList, onToggle, onDelete }) => {
+const List = ({ todoList, onToggle, onDelete, loading }) => {
 
   return (
     <div className='todoList'>
       {
-        todoList.length > 0 ? 
+        loading
+        ?
+        (
+          <ul className='initial-list'>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </ul>
+        )
+        : todoList.length > 0 ? 
         (
           // 데이터가 있을 때 표시
           <ul className='initial-list'>
@@ -27,7 +39,7 @@ const List = ({ todoList, onToggle, onDelete }) => {
               </div>
           </div>
         )
-      } 
+      }
     </div>
   )
 }

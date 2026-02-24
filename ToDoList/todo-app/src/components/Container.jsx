@@ -8,6 +8,7 @@ const Container = () => {
   // state
   const [input, setInput] = useState('')
   const [todoList, setTodoList] = useState([])
+  const [loading, setLoading] = useState(true)
 
   // 데이터 목록 요청
   const getList = () => {
@@ -21,6 +22,9 @@ const Container = () => {
       })
       .catch( error => {
         console.error('error : ', error);
+      })
+      .finally( ()=> {
+        setLoading(false)
       })
   }
 
@@ -88,7 +92,7 @@ const Container = () => {
       console.log('응답 메시지 : ', msg);
       if( response.ok ) {
         console.log('할 일 수정 성공');
-        getList() // 목록 갱신!
+        getList()
       } else {
         console.log('할 일 수정 실패');
       }
@@ -176,6 +180,7 @@ const Container = () => {
         todoList={todoList}
         onToggle={onToggle}
         onDelete={onDelete}
+        loading={loading}
       />
       <Footer onCompleteAll={onCompleteAll}
               onRemoveAll={onRemoveAll}/>

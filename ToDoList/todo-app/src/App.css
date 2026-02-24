@@ -181,3 +181,93 @@ body {
                      color-stop(0.86, #2a7eaf));
 }
 
+/* ───── 스켈레톤 ───── */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #dce3f0;
+  border-radius: 6px;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.08) 35%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.08) 65%,
+    transparent 80%
+  );
+  background-size: 300% 100%;
+  animation: shine 1.6s ease-in-out infinite;
+}
+@keyframes shine {
+  0%   { background-position: 150% 0; }
+  100% { background-position: -150% 0; }
+}
+.skeleton-item {
+  border: 2px solid #dce3f0 !important;
+  box-shadow: 0 0 12px rgba(100, 140, 230, 0.15) !important;
+  pointer-events: none;
+  animation: skeletonPulse 1.8s ease-in-out infinite;
+  background: rgba(0, 0, 200, 0.3);
+}
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+.skeleton-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+}
+.skeleton-text {
+  width: 180px;
+  height: 18px;
+}
+.skeleton-btn {
+  width: 60px;
+  height: 36px;
+  border-radius: 8px !important;
+}
+
+/* ───── 빈 상태 ───── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 420px;
+  gap: 12px;
+  animation: fadeInUp 0.5s ease;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.empty-icon {
+  font-size: 64px;
+  filter: drop-shadow(0 4px 8px rgba(100,130,220,0.3));
+  animation: bounce 2s ease infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+.empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: royalblue;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+.empty-sub {
+  font-size: 15px;
+  color: #7a9bd4;
+  margin: 0;
+}
+
+
