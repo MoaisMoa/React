@@ -19,7 +19,7 @@ const List = ({ todoList, onToggle, onDelete, loading }) => {
     prevScrollTop.current = scrollTop
 
   // 스크롤 맨 마지막 도달
-    if( clientHeight + scrollTop >= scrollHeight - 1 ) {
+    if( isScrollDown &&  clientHeight + scrollTop >= scrollHeight - 1 ) {
       alert('스크롤 맨 마지막 입니다.')
     }
   }
