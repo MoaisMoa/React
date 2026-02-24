@@ -122,6 +122,46 @@ const Container = () => {
     }
   }
 
+  // 할 일 전체 완료
+  const onCompleteAll = async() => {
+    const url = 'http://localhost:8080/todos/bulk'
+    const option = { method: 'PUT' }
+    try {
+      const response = await fetch(url, option)
+      const msg = await response.text()
+      console.log('응답 메세지 : ', msg);
+
+      if (response.ok){
+        console.log('전체 완료 성공');
+        getList();
+      } else {
+        console.log('전체 완료 실패')
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // 할 일 전체 삭제
+  const onRemoveAll = async() => {
+    const url = 'http://localhost:8080/todos/bulk'
+    const option = { method: 'DELETE' }
+    try {
+      const response = await fetch(url, option)
+      const msg = await response.text()
+      console.log('응답 메세지 : ', msg);
+
+      if (response.ok){
+        console.log('전체 삭제 완료');
+        getList();
+      } else {
+        console.log('전체 삭제 실패')
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   // 컴포넌트가 마운트 될 때, 할 일 목록 요청
   useEffect(() => {
     getList()
@@ -137,7 +177,8 @@ const Container = () => {
         onToggle={onToggle}
         onDelete={onDelete}
       />
-      <Footer />
+      <Footer onCompleteAll={onCompleteAll}
+              onRemoveAll={onRemoveAll}/>
     </div>
   )
 }
