@@ -35,6 +35,10 @@ const Container = () => {
     let name = input
     if (input=='') name = "제목 없음";
 
+    // if (!input || input.trim() === '') {
+    //   return;
+    // }
+
     // 데이터 등록 요청
     const data = {
       name : name,
