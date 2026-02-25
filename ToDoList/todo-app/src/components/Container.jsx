@@ -9,16 +9,20 @@ const Container = () => {
   const [input, setInput] = useState('')
   const [todoList, setTodoList] = useState([])
   const [loading, setLoading] = useState(true)
+  const [initialPagination, setInitialPagination] = useState(null)  // 초기 페이지 정보
+  const [listKey, setListKey] = useState(0)   // List 컴포넌트를 리셋하기 위한 key
 
   // 데이터 목록 요청
   const getList = () => {
     console.log('할 일 목록 데이터를 요청합니다.');
     const url = 'http://localhost:8080/todos'
+
     fetch(url)
       .then( response => response.json() )
       .then( data => {
         console.log('응답 데이터 : ', data);
         setTodoList(data.list)
+        setInitialPagination( data.pagination )
       })
       .catch( error => {
         console.error('error : ', error);
@@ -33,11 +37,11 @@ const Container = () => {
     // 기본 이벤트 동작 방지
     e.preventDefault();
     let name = input
-    if (input=='') name = "제목 없음";
+    // if (input=='') name = "제목 없음";
 
-    // if (!input || input.trim() === '') {
-    //   return;
-    // }
+    if (!input || input.trim() === '') {
+      return;
+    }
 
     // 데이터 등록 요청
     const data = {
@@ -61,6 +65,11 @@ const Container = () => {
         if (response.ok){
           console.log('할 일 등록 추가');
           getList()
+
+          // List 컴포넌트 리셋
+          setListKey(prev => prev + 1)
+
+          // 입력 비우기
           setInput('')
         } else {
           console.log('할 일 등록 실패');
@@ -181,10 +190,13 @@ const Container = () => {
       <Header />
       <Input input={ input } onChange={ onChange } onSubmit={ onSubmit }/>
       <List 
+        key={listKey}
         todoList={todoList}
         onToggle={onToggle}
         onDelete={onDelete}
         loading={loading}
+        getList={getList}
+        initialPagination={initialPagination}
       />
       <Footer onCompleteAll={onCompleteAll}
               onRemoveAll={onRemoveAll}/>

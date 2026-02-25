@@ -270,4 +270,8 @@ body {
   margin: 0;
 }
 
-
+.page-info {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
