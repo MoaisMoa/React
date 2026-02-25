@@ -2,6 +2,22 @@ import React, { useEffect, useRef, useState } from 'react'
 import Card from './Card'
 import SkeletonCard from './SkeletonCard'
 import Page from './Page'
+import { throttle } from 'lodash'
+
+// Throttle
+/* 
+const throttle = (fn, delay) => {
+  let timer = null
+  return (...args) => {
+    if(!timer) {
+      timer = setTimeout(()=>{
+        fn(...args)     // 원본 함수 호출
+        timer = null    // 타이머 제거
+      }, delay);
+    }
+  }
+}
+*/
 
 const List = ({ todoList, onToggle, onDelete, loading, getList, initialPagination }) => {
 
@@ -97,40 +113,42 @@ const List = ({ todoList, onToggle, onDelete, loading, getList, initialPaginatio
   }
 
   // 스크롤 이벤트 핸들러
-  const handleScroll = () => {
-    const { scrollHeight, scrollTop, clientHeight } = todoListRef.current
-
-    // 이전 스크롤보다 현재 스크롤 위치가 더 크면, 스크롤 아래
-    const isScrollDown = scrollTop > prevScrollTop.current
-    // 이전 스크롤 위치 업데이트
-    prevScrollTop.current = scrollTop
-
-    // 스크롤 맨 마지막 도달한다면..
-    if( isScrollDown &&  clientHeight + scrollTop >= scrollHeight - 1 ) {
-      const nextPage = currentPageRef.current + 1
-
-      // 마지막 페이지 초과하면 다음 페이지 요청X
-      if(lastPageRef.current === null || nextPage <= lastPageRef.current ){
-        addPage(nextPage)
-      }
-      if( lastPageRef.current != null && nextPage > lastPageRef.current ) {
-        alert('마지막 페이지 입니다.')
-      }
-    }
-  }
 
   useEffect(() => {
     const todoListElement = todoListRef.current
+    
+    const hadlerScroll = throttle( ()=> {
+      const { scrollHeight, scrollTop, clientHeight } = todoListRef.current
+
+      // 이전 스크롤보다 현재 스크롤 위치가 더 크면, 스크롤 아래
+      const isScrollDown = scrollTop > prevScrollTop.current
+      // 이전 스크롤 위치 업데이트
+      prevScrollTop.current = scrollTop
+
+      // 스크롤 맨 마지막 도달한다면..
+      if( isScrollDown &&  clientHeight + scrollTop >= scrollHeight - 1 ) {
+        const nextPage = currentPageRef.current + 1
+
+        // 마지막 페이지 초과하면 다음 페이지 요청X
+        if(lastPageRef.current === null || nextPage <= lastPageRef.current ){
+          addPage(nextPage)
+        }
+        if( lastPageRef.current != null && nextPage > lastPageRef.current ) {
+          alert('마지막 페이지 입니다.')
+        }
+      }
+    }, 200)
+    
     // 스크롤 이벤트 등록
     if ( todoListElement ) {
-      todoListElement.addEventListener('scroll', handleScroll)
+      todoListElement.addEventListener('scroll', hadlerScroll)
     }
   
     return () => {
       // 스크롤 이벤트 제거
       if ( todoListElement ) {
-      todoListElement.removeEventListener('scroll', handleScroll)
-    }
+        todoListElement.removeEventListener('scroll', hadlerScroll)
+      }
     }
   }, [])
   
