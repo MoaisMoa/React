@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.aloha.board.dto.Boards;
+import com.aloha.board.dto.Files;
 import com.aloha.board.dto.Pagination;
 import com.aloha.board.service.BoardService;
+import com.aloha.board.service.FileService;
 import com.github.pagehelper.PageInfo;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
     
     private final BoardService boardService;
+    private final FileService fileService;
 
     @GetMapping()
     public ResponseEntity<?> getAll(
@@ -98,6 +101,37 @@ public class BoardController {
             return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
             else
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 게시글 첨부 파일 목록
+     * /boards/{id}/files
+     * @param param
+     */
+    @GetMapping("{id}")
+    public ResponseEntity<?> boardFileList(@RequestParam("id") String id,
+    @RequestParam(value = "type", required = false) String type) {
+        try {
+            Files file = new Files();
+            file.setPId(id);
+            // type이 없을 때 => 부모 기준 모든 파일
+            if (type == null){
+                List<Files> list = fileService.listByParent(file);
+                return new ResponseEntity<>(list, HttpStatus.OK);
+            }
+            // type : "MAIN" => 메인파일 1개
+            if (type.equals("MAIN")) {
+                Files mainFile = fileService.selectByType(file);
+                return new ResponseEntity<>(mainFile,HttpStatus.OK);
+            }
+            // type : "SUB", ? => 타입별 파일 목록
+            else {
+                List<Files> list = fileService.listByType(file);
+                return new ResponseEntity<>(list, HttpStatus.OK);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
