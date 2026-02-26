@@ -1,3 +1,4 @@
+-- Active: 1767840762825@@127.0.0.1@3306@aloha
 DROP TABLE IF EXISTS `boards`;
 
 CREATE TABLE `boards` (
@@ -11,3 +12,17 @@ CREATE TABLE `boards` (
     UNIQUE KEY `uk_boards_id` (`id`)
  ) COMMENT '게시판'
 ;
+
+-- 샘플 데이터
+
+INSERT INTO boards (id, title, writer, content)
+SELECT 
+  UUID(),
+  CONCAT('게시판 샘플 데이터 ', t.num),
+  CONCAT('작성자 ', t.num),
+  CONCAT('내용 샘플 데이터 ', t.num)
+FROM (
+  SELECT @row := @row + 1 AS num
+  FROM information_schema.tables, (SELECT @row := 0) r
+  LIMIT 100
+) t;

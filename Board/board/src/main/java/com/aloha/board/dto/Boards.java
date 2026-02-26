@@ -1,6 +1,7 @@
 package com.aloha.board.dto;
 
 import java.util.Date;
+import java.util.UUID;
 
 import lombok.Data;
 
@@ -15,6 +16,6 @@ public class Boards {
     private Date updatedAt;
 
     public Boards() {
-        this.id = java.util.UUID.randomUUID().toString();
+        this.id = UUID.randomUUID().toString();
     }
 }

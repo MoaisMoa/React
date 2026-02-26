@@ -1,5 +1,9 @@
 package com.aloha.board.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,73 +24,82 @@ import com.github.pagehelper.PageInfo;
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin (
-    // origins = {
-    // "http://localhost:3000",
-    // "http://localhost:5173"
-    // }
-    "*"
-)
+
+@CrossOrigin ("*")
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/boards")
 public class BoardController {
     
     private final BoardService boardService;
 
-    // 목록, 조회, 등록, 수정, 삭제
-
-    // 목록    
     @GetMapping()
     public ResponseEntity<?> getAll(
-        @RequestParam(defaultValue = "1", required = false) int page,
-        @RequestParam(defaultValue = "5", required = false) int size,
-        Pagination pagination) {
-            try {
-                PageInfo<Boards> pageInfo = boardService.list(page, size);
-                return new ResponseEntity<>(pageInfo, HttpStatus.OK);
-            } catch (Exception e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-         }
+        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+        @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+        Pagination pagination
+    ) {
+        try {
+            PageInfo<Boards> pageInfo = boardService.page(page, size);
+            pagination.setPage(page);
+            pagination.setSize(size);
+            pagination.setTotal(pageInfo.getTotal());
+            Map<String, Object> response = new HashMap<>();
+            response.put("list", pageInfo.getList());
+            response.put("pagination", pagination);
 
-     // 조회
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOne(@PathVariable String id) {
+    public ResponseEntity<?> getOne(@PathVariable("id") String id) {
         try {
-            return new ResponseEntity<>("GetOne Result", HttpStatus.OK);
+            Boards board = boardService.selectById(id);
+            return new ResponseEntity<>(board, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // 등록
+    
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody Boards boards) {
+    public ResponseEntity<?> create(@RequestBody Boards board) {
         try {
-            return new ResponseEntity<>("Create Result", HttpStatus.OK);
+            boolean result = boardService.insert(board);
+            if ( result )
+            return new ResponseEntity<>(board, HttpStatus.OK);
+            else
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // 수정
+    
     @PutMapping()
-    public ResponseEntity<?> update(@RequestBody Boards boards) {
+    public ResponseEntity<?> update(@RequestBody Boards board) {
         try {
-            return new ResponseEntity<>("Update Result", HttpStatus.OK);
+            boolean result = boardService.updateById(board);
+            if ( result )
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+            else
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // 삭제
+    
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> destroy(@PathVariable String id) {
+    public ResponseEntity<?> destroy(@PathVariable("id") String id) {
         try {
-            return new ResponseEntity<>("Destroy Result", HttpStatus.OK);
+            boolean result = boardService.deleteById(id);
+            if ( result )
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+            else
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    } 
+    }
 }
