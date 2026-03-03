@@ -1,23 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useBoards } from '../../hooks/useBoards'
 
 const List = () => {
+  // Coustom Hook 사용
+  const { list, pagination, isLoading, isError } = useBoards()
+
   return (
     <div>
-      {/* 상단 헤더 */}
       <div className="flex items-center justify-between mb-5">
-        <h1 
-          className='text-xl font-semibold text-gray-900'>
-            게시판
-        </h1>
+        <h1 className='text-xl font-semibold text-gray-900'>게시판</h1>
         <Link
           to="/boards/insert"
           className='inline-flex items-center gap-1.5
           px-4 py-2 bg-blue-500 text-white text-sm
           font-medium rounded-lg hover:bg-blue-600
-          transition-colors'>
-            글쓰기
-        </Link>
+          transition-colors'>글쓰기</Link>
       </div>
 
       {/* 테이블 */}
@@ -43,22 +41,32 @@ const List = () => {
             </tr>
           </thead>
           <tbody className='divide-y divide-gray-100'>
-            <tr className='hover:bg-gray-50 transition-colors'>
-              <td className='px-4 py-3 text-gray-500'>1</td>
-              <td className='px-4 py-3'>
-                <div className="w-14 h-9 rounded bg-gray-100"></div>
-              </td>
-              <td className='px-4 py-3'>
-                <Link 
-                  to={`/boards/:id`}
-                  className='text-gray-900 hover:text-blue-600 font-medium transition-colors'
-                >
-                  게시글 제목입니다.
-                </Link>
-              </td>
-              <td className='px-4 py-3 text-gray-600'>작성자</td>
-              <td className='px-4 py-3 text-gray-400 text-xs'>2026-02-27 12:30:00</td>
-            </tr>
+            {
+              list.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className='py-12 text-center text-gray-400 text-sm'>등록된 게시글이 없습니다.</td>
+                </tr>
+              )
+              : (
+                list.map((board, idx) => (
+                  <tr className='hover:bg-gray-50 transition-colors'>
+                    <td className='px-4 py-3 text-gray-500'>{board.no}</td>
+                    <td className='px-4 py-3'>
+                      <div className="w-14 h-9 rounded bg-gray-100"></div>
+                    </td>
+                    <td className='px-4 py-3'>
+                      <Link 
+                        to={`/boards/${board.id}`}
+                        className='text-gray-900 hover:text-blue-600 font-medium transition-colors'>
+                        {board.title}
+                      </Link>
+                    </td>
+                    <td className='px-4 py-3 text-gray-600'>{board.writer}</td>
+                    <td className='px-4 py-3 text-gray-400 text-xs'>{board.createdAt}</td>
+                  </tr>
+                ))
+              )
+            }
           </tbody>
         </table>
       </div>
