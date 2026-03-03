@@ -1,10 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useBoards } from '../../hooks/useBoards'
+import Pagination from '../common/Pagination'
 
 const List = () => {
+
+  // 
+  const [ searchParams ] = useSearchParams()
+  const page = parseInt(searchParams.get('page') || '1')
+  const size = parseInt(searchParams.get('size') || '10')
+
   // Coustom Hook 사용
-  const { list, pagination, isLoading, isError } = useBoards()
+  const { list, pagination, isLoading, isError } = useBoards(page, size)
 
   return (
     <div>
@@ -49,7 +56,7 @@ const List = () => {
               )
               : (
                 list.map((board, idx) => (
-                  <tr className='hover:bg-gray-50 transition-colors'>
+                  <tr key={board.id ?? board.no ?? idx} className='hover:bg-gray-50 transition-colors'>
                     <td className='px-4 py-3 text-gray-500'>{board.no}</td>
                     <td className='px-4 py-3'>
                       <div className="w-14 h-9 rounded bg-gray-100"></div>
@@ -70,6 +77,8 @@ const List = () => {
           </tbody>
         </table>
       </div>
+        {/* 페이징네이션 */}
+        <Pagination pagination={ pagination } />
     </div>
   )
 }
