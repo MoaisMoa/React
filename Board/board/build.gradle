@@ -37,7 +37,7 @@ dependencies {
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.5'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	// pagehelper
-	implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:2.1.0' 
+	implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:2.1.0'
 }
 
 tasks.named('test') {

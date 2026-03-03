@@ -1,10 +1,8 @@
--- Active: 1767840762825@@127.0.0.1@3306@aloha
-
 DROP TABLE IF EXISTS `files`;
 CREATE TABLE `files` (
-  `no` BIGINT NOT NULL AUTO_INCREMENT,          -- 파일 번호 (자동증가)
+  `no` BIGINT NOT NULL AUTO_INCREMENT,             -- 파일 번호 (자동증가)
   `id` VARCHAR(64) NOT NULL,                    -- UK 
-  `p_id` varchar(45) NOT NULL,                  -- 부모 ID (UID)
+  `p_id` varchar(64) NOT NULL,                  -- 부모 ID (UID)
   `file_name` text NOT NULL,                    -- 저장된 파일명
   `origin_name` text,                           -- 원본 파일명
   `file_path` text NOT NULL,                    -- 파일 경로

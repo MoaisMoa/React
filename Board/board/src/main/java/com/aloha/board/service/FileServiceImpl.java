@@ -13,11 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.MimeTypeUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.aloha.board.dto.Files;
+import com.aloha.board.domain.Files;
 import com.aloha.board.mapper.FileMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -33,10 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 public class FileServiceImpl implements FileService {
 
   private final FileMapper fileMapper;
-  private final ResourceLoader resourceLoader; // 자원을 가져오는 객체
+  private final ResourceLoader resourceLoader;  // 자원을 가져오는 객체
 
-  @Value("${upload.path}")
+  @Value("${upload.path")
   private String uploadPath;   // 업로드 경로
+
+
 
   @Override
   public List<Files> list() {
@@ -277,52 +277,41 @@ public class FileServiceImpl implements FileService {
     return fileMapper.listByType(file);
   }
 
-  // 썸네일
   @Override
   public boolean thumbnail(String id, HttpServletResponse response) throws Exception {
     Files file = selectById(id);
     String filePath = file != null ? file.getFilePath() : null;
 
     File imgFile;
+    // 파일 경로가 null 또는 파일이 존재하지 않는 경우 ➡ no-image
+    // org.springframework.core.io.Resource
     Resource resource = resourceLoader.getResource("classpath:static/img/no-image.png");
-    
-    // 파일 경로가 null 또는 파일이 존재하지 않는 경우 => no-image.png(기본이미지)
-    if (filePath == null || !(imgFile = new File(filePath)).exists()){
-        imgFile = resource.getFile();
-        filePath = imgFile.getPath();
+    if( filePath == null || !(imgFile = new File(filePath)).exists() ) {
+      // no-image.png (기본 이미지) 적용
+      imgFile = resource.getFile();
+      filePath = imgFile.getPath();
     }
 
-    // 확장자
-    // C:/upload/~.png
-    String ext = filePath.substring(filePath.lastIndexOf(".")+1);
-    String mimeType = MimeTypeUtils.parseMimeType("image/"+ ext).toString();
+    // 확장자 
+    // C:/upload/2026.02.06-강아지.png
+    String ext = filePath.substring(filePath.lastIndexOf(".") + 1);
+    String mimeType = MimeTypeUtils.parseMimeType("image/" + ext).toString();
     MediaType mType = MediaType.valueOf(mimeType);
 
-    if(mType == null){
+    if( mType == null ) {
       // 이미지 타입이 아닌 경우
       response.setContentType(MediaType.IMAGE_PNG_VALUE);
       imgFile = resource.getFile();
     } else {
       // 이미지 타입
-      response.setContentType(mimeType.toString());
+      response.setContentType(mType.toString());
     }
 
-    // 파일 입력
-    FileInputStream fis = new FileInputStream(imgFile);
-
-    // 파일 출력
-    ServletOutputStream sos = response.getOutputStream();
-    
-    int result = FileCopyUtils.copy(fis, sos);
+    FileInputStream fis = new FileInputStream(imgFile);     // 파일 입력
+    ServletOutputStream sos = response.getOutputStream();   // 파일 출력
+    int result = FileCopyUtils.copy(fis, sos);              // 파일 전송
     return result > 0;
   }
 
-  // 썸네일 이미지
-  @GetMapping("/img/{id}")
-  public void thumbnailImg(
-    @PathVariable("id") String id, HttpServletResponse response) throws Exception {
-      boolean result = this.thumbnail(id, response);
-      if(result)
-        log.info("섬네일 응답 성공");
-    }
+  
 }

@@ -5,11 +5,12 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.aloha.board.dto.Files;
+import com.aloha.board.domain.Files;
 
 @Mapper
 public interface FileMapper extends BaseMapper<Files> {
-// 부모 기준 목록
+
+  // 부모 기준 목록
   public List<Files> listByParent(Files file);
   // 부모 기준 삭제
   public int deleteByParent(Files file);
@@ -28,4 +29,6 @@ public interface FileMapper extends BaseMapper<Files> {
   public Files selectByType(Files file);
   // 타입별 파일 목록
   public List<Files> listByType(Files file);
+
+  
 }
