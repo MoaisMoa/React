@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { boardsApi } from "../apis/boards"
 import {useNavigate } from "react-router-dom"
 import Swal from 'sweetalert2'
@@ -37,10 +37,27 @@ export const useBoardMutations = (id) => {
             navigate('/boards')
         }
     })
+
+    // 글 수정
+    const updateMutation = useMutation({
+        mutationFn: ({ data, headers }) => boardsApi.update(data, headers),
+        onSuccess: async (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['boards'] })
+            if (variables?.data?.id) {
+                queryClient.invalidateQueries({ queryKey: ['boards', variables.data.id] })
+            }
+
+            await $alert('수정 성공', '게시글 수정이 완료되었습니다.', 'success')
+            navigate(variables?.data?.id ? `/boards/${variables.data.id}` : '/boards')
+        }
+    })
+
     return {
         insertBoard: (data, headers) => insertMutation.mutate({ data, headers }),
+        updateBoard: (data, headers) => updateMutation.mutate({ data, headers }),
 
         // isPending : 서버로 요청 보낸 후, 응답 대기 상태
         isInserting: insertMutation.isPending,
+        isUpdating: updateMutation.isPending,
     }
 }
