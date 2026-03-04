@@ -7,7 +7,7 @@ import { useBoardMutations } from '../../hooks/useBoardMutations'
 import { useForm } from 'react-hook-form'
 import { filesApi } from '../../apis/files'
 
-// CKEditor image upload plogin
+// CKEditor 이미지 업로드 플로그인
 function uploadAdapterPlugin(editor) {
   editor.plugins.get('FileRepository').createUploadAdapter = (loader) => ({
     upload: async () => {

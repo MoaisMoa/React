@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import useBoard, {} from '../../hooks/useBoard'
 import { useForm } from 'react-hook-form'
 import { useBoardMutations } from '../../hooks/useBoardMutations'
+import { filesApi } from '../../apis/files'
 
 const Update = () => {
   const { id } = useParams()
@@ -20,6 +21,22 @@ const Update = () => {
     )
   }
 
+  // CKEditor 이미지 업로드 플로그인
+  function uploadAdapterPlugin(editor) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => ({
+      upload: async () => {
+        const file = await loader.file
+        const formData = new FormData()
+        formData.append('pId', '')
+        formData.append('type', 'SUB')
+        formData.append('data', file)
+        const res = await filesApi.upload(formData, {'Content-Type' : 'multipart/form-data'})
+        return { default: `/api/files/img/${res.data.id}` }
+      },
+      abort: () => {},
+    })
+  }
+
   // 기존 데이터 초기화
   useEffect(() => {
     if(board) {
@@ -31,8 +48,7 @@ const Update = () => {
   
   const inputClass =
     `w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none 
-    focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition bg-white
-    `
+    focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition bg-white`
     
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -54,9 +70,8 @@ const Update = () => {
             />
             { 
               errors.title && (
-                  <p className='mt-1 text-xs text-red-500'>유효한 값을 입력하세요.</p>
-                )
-            }
+                  <p className='mt-1 text-xs text-red-500'>{errors.title.message}</p>
+                )}
           </div>
         </div>
 
@@ -74,8 +89,7 @@ const Update = () => {
             {
               errors.writer && (
                 <p className='mt-1 text-xs text-red-500'>{ errors.writer.message }</p>
-              )
-            }
+              ) }
           </div>
         </div>
 
@@ -89,6 +103,7 @@ const Update = () => {
               editor={ClassicEditor}
               data = {contentRef.current}
               config={{
+                extraPlugins: [uploadAdapterPlugin],
                 toolbar: [
                   'undo', 'redo', '|',
                   'heading', '|',
@@ -135,9 +150,7 @@ const Update = () => {
           <input type="file" multiple
             className='flex-1 text-sm text-gray-600 file:mr-3 file:py-1.5 file:rounded-md
               file:border-0 file:text-xs file:font-medium file:bg-gray-100 file:text-gray-600
-              hover:file:bg-gray-200 cursor-pointer
-            ' 
-          />
+              hover:file:bg-gray-200 cursor-pointer' />
         </div>
       </div>
 
@@ -146,16 +159,12 @@ const Update = () => {
         <button
           type='button'
           className='px-4 py-2 w-full text-sm font-medium text-gray-700 bg-white border border-gray-200
-            rounded-lg hover:bg-gray-50 transition-colors cursor-pointer'
-          >
-            취소
+            rounded-lg hover:bg-gray-50 transition-colors cursor-pointer'>취소
         </button>
         <button
           type='submit'
           className='px-4 py-2 w-full text-sm font-medium text-white bg-blue-500
-            rounded-lg hover:bg-blue-600 transition-colors cursor-pointer'
-          >
-            저장
+            rounded-lg hover:bg-blue-600 transition-colors cursor-pointer'>저장
         </button>
       </div>
     </form>
