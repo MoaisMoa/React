@@ -5,6 +5,23 @@ import { ImageIcon, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useBoardMutations } from '../../hooks/useBoardMutations'
 import { useForm } from 'react-hook-form'
+import { filesApi } from '../../apis/files'
+
+// CKEditor image upload plogin
+function uploadAdapterPlugin(editor) {
+  editor.plugins.get('FileRepository').createUploadAdapter = (loader) => ({
+    upload: async () => {
+      const file = await loader.file
+      const formData = new FormData()
+      formData.append('pId', '')
+      formData.append('type', 'SUB')
+      formData.append('data', file)
+      const res = await filesApi.upload(formData, {'Content-Type' : 'multipart/form-data'})
+      return { default: `/api/files/img/${res.data.id}` }
+    },
+    abort: () => {},
+  })
+}
 
 const Insert = () => {
   const navigate = useNavigate()
@@ -117,6 +134,7 @@ const Insert = () => {
           <CKEditor 
             editor={ClassicEditor}
             config={{
+              extraPlugins: [uploadAdapterPlugin],
               toolbar: [
                 'undo', 'redo', '|',
                 'heading', '|',

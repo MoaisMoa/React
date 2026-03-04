@@ -1,5 +1,5 @@
 import axios from "axios";
-const api = axios.create({boseURL: '/api'})
+const api = axios.create({baseURL: '/api'})
 export const filesApi = {
     upload: (data, headers) => api.post('/files', data, {headers}),
     download: (id) => api.get(`/files/download/${id}`, {responseType: 'blob'}),
