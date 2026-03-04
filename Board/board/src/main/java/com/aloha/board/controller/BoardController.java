@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -77,7 +78,8 @@ public class BoardController {
       }
   }
   
-  @PostMapping()
+  // Form
+  @PostMapping(value = "", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   public ResponseEntity<?> create(@RequestBody Boards board) {
     try {
       boolean result = boardService.insert(board);
@@ -89,9 +91,63 @@ public class BoardController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  // Multipart
+  @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<?> createMultipartForm(Boards board) {
+    try {
+      boolean result = boardService.insert(board);
+      if( result )
+        return new ResponseEntity<>(board, HttpStatus.CREATED);
+      else 
+        return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // JSON
+  @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> createJSON(@RequestBody Boards board) {
+    try {
+      boolean result = boardService.insert(board);
+      if( result )
+        return new ResponseEntity<>(board, HttpStatus.CREATED);
+      else 
+        return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
   
-  @PutMapping()
-  public ResponseEntity<?> update(@RequestBody Boards board) {
+  @PutMapping(value = "", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  public ResponseEntity<?> update(Boards board) {
+    try {
+      boolean result = boardService.updateById(board);
+      if( result )
+        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+      else 
+        return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  
+  @PutMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<?> updateMultiPartForm(Boards board) {
+    try {
+      boolean result = boardService.updateById(board);
+      if( result )
+        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+      else 
+        return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> updateJSON(@RequestBody Boards board) {
     try {
       boolean result = boardService.updateById(board);
       if( result )

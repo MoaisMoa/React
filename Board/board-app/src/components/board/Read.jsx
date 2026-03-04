@@ -5,12 +5,14 @@ import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import useBoard from '../../hooks/useBoard'
 import FileItem from '../common/FileItem'
+import { useFileDownload } from '../../hooks/useFileDownload'
 
 const Read = () => {
   
   // Custom Hook
   const { id } = useParams()
   const { board, fileList, isLoading, isError } = useBoard(id)
+  const { download } = useFileDownload()
 
   return (
     <div>
@@ -47,6 +49,7 @@ const Read = () => {
                   <FileItem
                     key={file.id}
                     file={file}
+                    onDownload={download}
                   />
                 ))
               }
