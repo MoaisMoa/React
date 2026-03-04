@@ -28,7 +28,7 @@ export const useBoardMutations = (id) => {
 
         /* "요청 성공 시" 실행되는 콜백 함수 */
         onSuccess: async () => {
-            queryClient.invalidateQueries({ queryKey: ['board'] })
+            queryClient.invalidateQueries({ queryKey: ['boards'] })
             
             // SweetAlert2
             await $alert('등록 성공', '게시글 등록이 완료되었습니다.', 'success')

@@ -2,8 +2,6 @@ package com.aloha.board.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.aloha.board.domain.Files;
 
 import jakarta.servlet.http.HttpServletResponse;

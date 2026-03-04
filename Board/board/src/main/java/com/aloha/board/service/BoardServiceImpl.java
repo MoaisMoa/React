@@ -75,7 +75,7 @@ public class BoardServiceImpl implements BoardService {
         }
         Files fileInfo = new Files();
         fileInfo.setPId(pId);
-        fileInfo.setData(mainFile);
+        fileInfo.setData(multipartFile);
         fileInfo.setType("SUB");
         uploadFileList.add(fileInfo);
       }
@@ -83,8 +83,7 @@ public class BoardServiceImpl implements BoardService {
     try {
       result += fileService.upload(uploadFileList);
     } catch (Exception e) {
-      log.error("게시글 파일 업로드 중 에러 발생");
-      e.printStackTrace();
+      log.error("게시글 파일 업로드 중 에러 발생", e);
     }
     return result;
   }

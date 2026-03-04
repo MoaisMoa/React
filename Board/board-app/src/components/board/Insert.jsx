@@ -1,7 +1,7 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import { ImageIcon } from 'lucide-react'
+import { ImageIcon, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useBoardMutations } from '../../hooks/useBoardMutations'
 import { useForm } from 'react-hook-form'
@@ -10,6 +10,12 @@ const Insert = () => {
   const navigate = useNavigate()
   const contentRef = useRef('')
   const { insertBoard, isInserting } = useBoardMutations()
+  // 메인 파일 state
+  const fileInputRef = useRef(null)
+  const [mainFile, setMainFile] = useState(null)
+  const [preview, setPreview] = useState(null)
+  const [isDragging, setIsDragging] = useState(null)
+
   const { register, handleSubmit, formState: { errors } } = useForm()
 
   const onSubmit = (data) => {
@@ -18,9 +24,41 @@ const Insert = () => {
     formData.append('writer', data.writer)
     formData.append('content', contentRef.current)
 
+    // 메인 파일
+    if( mainFile ) formData.append('mainFile', mainFile)
+
+    // 첨부 파일
+    if( data.files?.length ) { Array.from(data.files).forEach((f) => formData.append('files', f)) }
+
     insertBoard(formData, { 'Content-Type' : 'multipart/form-data' })
   }
 
+  // 파일 선택 & 드래그앤드롭
+  const handleMainFile = (file) => {
+    // 이미지 파일인지 확인
+    if( !file||!file.type.startsWith('image/')) return
+    setMainFile(file)
+    const reader = new FileReader()
+    reader.onload = (e) => setPreview(e.target.result)
+      reader.readAsDataURL(file)
+  }
+
+  // 메인 파일 제거
+  const clearMainFile = () => {
+    setMainFile(null)
+    setPreview(null)
+    if(fileInputRef.current ) fileInputRef.current.value = ''
+  }
+
+  // 드래그 방지
+  const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true) }
+  const handleDragLeave = (e) => { e.preventDefault(); setIsDragging(false) }
+  const handleDrop = (e) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files[0]
+    if( file ) handleMainFile(file)
+  }
 
   const inputClass =
     `w-full px-3 py-2 text-sm border border-gray-200 rounded outline-none 
@@ -62,7 +100,7 @@ const Insert = () => {
             <input
               placeholder='작성자를 입력해주세요'
               className={inputClass}
-              {...register('title', { required: '작성자를 입력 해주세요.' })}
+              {...register('writer', { required: '작성자를 입력 해주세요.' })}
             />
              { errors.title && (
                <p className='mt-1 text-xs text-red-500'>{ errors.write.message }</p>
@@ -100,19 +138,52 @@ const Insert = () => {
             메인 파일
           </label>
           <div className="flex-1">
-            <div
-              className='w-full h-28 border-2 border-dashed flex flex-col items-center justify-center
-                        gap-1 curosr-pointer transition-colors select-none'>
-              <ImageIcon size={22} className='text-gray-300' />
-            </div>
-            <span className='text-xs text-gray-400'>
-              클릭하거나 파일을 드래그하세요
-            </span>
-            <span className='text-xs text-gray-300'>
-              JPG, PNG, GIF, WEBP
-            </span>
+            {
+              preview ? (
+                // 미리보기
+                <div className="relative inline-block">
+                  <img src={preview} alt="미리보기"
+                       className='w-48 h-32 object-cover rounded-lg border border-gray-200'/>
+                       <button type='button'
+                               onClick={clearMainFile}
+                               aria-label="이미지 삭제"
+                               className='absolute -top-2 -right-2 w-5 h-5 bg-gray-700 text-white
+                               flex items-center justify-center hover:bg-gray-900 transition-colors'
+                       >
+                          <X size={11} />
+                       </button>
+                </div>
+              ) : (
+                // Drag and Drop zone
+              <div
+                  onDragOver = {handleDragOver}
+                  onDragLeave = {handleDragLeave}
+                  onDrop = { handleDrop }
+                  onClick = { ()=> fileInputRef.current?.click() }
+                  className = {`
+                                w-full h-28 border-2 border-dashed
+                                flex flex-col items-center justify-center
+                                gap-1 curosr-pointer transition-colors select-none
+                                ${isDragging
+                                  ? 'border-blue-400 bh-blue-50'
+                                  : 'boarder-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                                }
+                            `}>
+                  <ImageIcon size={22} className={isDragging ? 'text-gray-400' : 'text-gray-300'}/>
+                  <span className='text-xs text-gray-400'>
+                    클릭하거나 파일을 드래그하세요
+                  </span>
+                  <span className='text-xs text-gray-300'>
+                    JPG, PNG, GIF, WEBP
+                  </span>
+              </div>
+              )
+            }
+            
             {/* 파일 입력 */}
-            <input type="file" accept='image/*' className='hidden' />
+                 <input ref={ fileInputRef } type="file" accept='image/*' className='hidden'
+                   onChange={(e) => handleMainFile(e.target.files?.[0])}
+            />
           </div>
         </div>
 
@@ -122,6 +193,7 @@ const Insert = () => {
             첨부 파일
           </label>
           <input type="file" multiple
+            {...register('files')}
             className='flex-1 text-sm text-gray-600 file:mr-3 file:py-1.5 file:rounded-md
               file:border-0 file:text-xs file:font-medium file:bg-gray-100 file:text-gray-600
               hover:file:bg-gray-200 cursor-pointer

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aloha.board.domain.Boards;
@@ -93,12 +94,13 @@ public class BoardController {
   }
 
   // Multipart
+  @ResponseBody
   @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> createMultipartForm(Boards board) {
     try {
       boolean result = boardService.insert(board);
       if( result )
-        return new ResponseEntity<>(board, HttpStatus.CREATED);
+        return new ResponseEntity<>("SUCCESS", HttpStatus.CREATED);
       else 
         return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
@@ -107,6 +109,7 @@ public class BoardController {
   }
 
   // JSON
+  @ResponseBody
   @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> createJSON(@RequestBody Boards board) {
     try {

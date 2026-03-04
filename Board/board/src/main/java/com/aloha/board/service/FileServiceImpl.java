@@ -33,7 +33,7 @@ public class FileServiceImpl implements FileService {
   private final FileMapper fileMapper;
   private final ResourceLoader resourceLoader;  // 자원을 가져오는 객체
 
-  @Value("${upload.path")
+  @Value("${upload.path}")
   private String uploadPath;   // 업로드 경로
 
 
