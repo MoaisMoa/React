@@ -11,6 +11,7 @@ import FileItem from '../common/FileItem'
 import { useFileDownload } from '../../hooks/useFileDownload'
 import Swal from 'sweetalert2'
 
+
 const Update = () => {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -25,6 +26,7 @@ const Update = () => {
   const [mainFile, setMainFile] = useState(null)
   const [preview, setPreview] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
+  
 
 
   const onSubmit = (data) => {

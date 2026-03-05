@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useBoards } from '../../hooks/useBoards'
 import Pagination from '../common/Pagination'
+import { formatDate } from '../../utils/format'
 
 const List = () => {
 
@@ -79,7 +80,7 @@ const List = () => {
                       </Link>
                     </td>
                     <td className='px-4 py-3 text-gray-600'>{board.writer}</td>
-                    <td className='px-4 py-3 text-gray-400 text-xs'>{board.createdAt}</td>
+                    <td className='px-4 py-3 text-gray-400 text-xs'>{formatDate( board.createdAt )}</td>
                   </tr>
                 ))
               )
