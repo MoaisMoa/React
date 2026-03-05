@@ -19,6 +19,16 @@
             "projectName": "board",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AlohaApplication<aloha-jwt>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.aloha.jwt.AlohaApplication",
+            "projectName": "aloha-jwt",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
