@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import { ImageIcon } from 'lucide-react'
+import { ImageIcon, Trash2 } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 import useBoard, {} from '../../hooks/useBoard'
 import { useForm } from 'react-hook-form'
 import { useBoardMutations } from '../../hooks/useBoardMutations'
 import { filesApi } from '../../apis/files'
+import FileItem from '../common/FileItem'
+import { useFileDownload } from '../../hooks/useFileDownload'
 
 const Update = () => {
   const { id } = useParams()
@@ -15,6 +17,7 @@ const Update = () => {
   const contentRef = useRef('')
   const [editorReady, setEditorReady] = useState(false)
   const {updateBoard} = useBoardMutations(id);
+  const { download } = useFileDownload()
   const onSubmit = (data) => {
     updateBoard({id: id, title: data.title, writer: data.writer, content: contentRef.current },
       {'Content-Type' : 'application/json'}
@@ -119,6 +122,41 @@ const Update = () => {
             />
           )}
         </div>
+          {/* 첨부 파일 */}
+          {
+            fileList.length > 0 && (
+              <div className="px-5 px-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className='text-sm font-semibold text-gray-700'>
+                    첨부 파일 ({fileList.length})
+                  </h3>
+                  <button type='button' className='inline-flex items-center gap-1 px-3 py-1.5 text-xs
+                        font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors'>
+                    <Trash2 size={13} />
+                    선택 삭제()
+                  </button>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    {
+                      fileList.map((file) => (
+                        <FileItem
+                          key={file.id}
+                          file={file}
+                          onDownload={download}
+                          selectable
+                          onDelete
+                        />
+                      ))
+                    }
+                  </div>
+              </div>
+            )
+          }
+
+          delete() {
+            
+          }
 
         {/* 메인 파일 업로드 영역 */}
         <div className="flex items-start gap-4 px-5 py-4">
@@ -152,6 +190,8 @@ const Update = () => {
               file:border-0 file:text-xs file:font-medium file:bg-gray-100 file:text-gray-600
               hover:file:bg-gray-200 cursor-pointer' />
         </div>
+        
+          
       </div>
 
       {/* 버튼 */}
