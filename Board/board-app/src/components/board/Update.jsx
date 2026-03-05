@@ -9,6 +9,7 @@ import { useBoardMutations } from '../../hooks/useBoardMutations'
 import { filesApi } from '../../apis/files'
 import FileItem from '../common/FileItem'
 import { useFileDownload } from '../../hooks/useFileDownload'
+import Swal from 'sweetalert2'
 
 const Update = () => {
   const { id } = useParams()
@@ -16,7 +17,7 @@ const Update = () => {
   const { register, handleSubmit, reset, formState: { errors }} = useForm()
   const contentRef = useRef('')
   const [editorReady, setEditorReady] = useState(false)
-  const {updateBoard} = useBoardMutations(id);
+  const {updateBoard, deleteFile, isDeleting } = useBoardMutations(id)
   const { download } = useFileDownload()
   const onSubmit = (data) => {
     updateBoard({id: id, title: data.title, writer: data.writer, content: contentRef.current },
@@ -145,17 +146,29 @@ const Update = () => {
                           file={file}
                           onDownload={download}
                           selectable
-                          onDelete
+                          onDelete={
+                            async(fileId) => {
+                              const result = await Swal.fire({
+                                title: '파일을 삭제하시겠습니까?',
+                                text: '파일을 삭제하면 퇴돌릴 수 없습니다.',
+                                icon : 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: '삭제',
+                                cancelButtonText:'취소',
+                                confirmButtonColor: '#ef4444',
+                                cancelButtonColor: '#6b7280'
+                              })
+                              if(result.isConfirmed){
+                                deleteFile(fileId)
+                              }
+                            }
+                          }
                         />
                       ))
                     }
                   </div>
               </div>
             )
-          }
-
-          delete() {
-            
           }
 
         {/* 메인 파일 업로드 영역 */}

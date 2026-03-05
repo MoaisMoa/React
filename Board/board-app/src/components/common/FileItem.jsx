@@ -58,8 +58,7 @@ const FileItem = ({ file, onDownload, onDelete, selectable, checked, onCheck }) 
             className='p-1.5 rounded text-gray-500 hover:text-red-500 hover:bg-red-50 transition-colors
                       cursor-pointer'
             title="삭제"
-            onClick={ () => onDelete(file.id) }
-            >
+            onClick={ () => onDelete(file.id) } >
             <Trash2 size={15} />
           </button>
           )}

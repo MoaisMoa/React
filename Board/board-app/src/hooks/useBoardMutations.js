@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { boardsApi } from "../apis/boards"
 import {useNavigate } from "react-router-dom"
 import Swal from 'sweetalert2'
+import { filesApi } from "../apis/files"
 
 // 공통 성공 alert
 const $alert = (title, text, icon) =>
@@ -52,12 +53,22 @@ export const useBoardMutations = (id) => {
         }
     })
 
+    // 단일 파일 삭제 remove: (id) => api.delete(`/files/${id}`),
+    const deleteFileMutation = useMutation({
+        mutationFn: (fileId) => filesApi.remove(fileId),
+        onSuccess: async () => {
+            queryClient.invalidateQueries({ queryKey: ['board', id]})
+        }
+    })
+
     return {
         insertBoard: (data, headers) => insertMutation.mutate({ data, headers }),
         updateBoard: (data, headers) => updateMutation.mutate({ data, headers }),
+        deleteFile : (fileId) => deleteFileMutation.mutate(fileId),
 
         // isPending : 서버로 요청 보낸 후, 응답 대기 상태
         isInserting: insertMutation.isPending,
         isUpdating: updateMutation.isPending,
+        isDeleting: deleteFileMutation.isPending,
     }
 }
