@@ -67,7 +67,9 @@ const Insert = () => {
     if(fileInputRef.current ) fileInputRef.current.value = ''
   }
 
-  // 드래그 방지
+  
+
+  // 드래그 방지 이벤트
   const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true) }
   const handleDragLeave = (e) => { e.preventDefault(); setIsDragging(false) }
   const handleDrop = (e) => {
@@ -166,13 +168,12 @@ const Insert = () => {
                                onClick={clearMainFile}
                                aria-label="이미지 삭제"
                                className='absolute -top-2 -right-2 w-5 h-5 bg-gray-700 text-white
-                               flex items-center justify-center hover:bg-gray-900 transition-colors'
-                       >
+                               flex items-center justify-center hover:bg-gray-900 transition-colors'>
                           <X size={11} />
                        </button>
                 </div>
               ) : (
-                // Drag and Drop zone
+                // 드래그앤드랍
               <div
                   onDragOver = {handleDragOver}
                   onDragLeave = {handleDragLeave}
@@ -186,7 +187,7 @@ const Insert = () => {
                                   ? 'border-blue-400 bh-blue-50'
                                   : 'boarder-gray-200 hover:border-blue-300 hover:bg-gray-50'
                                 }
-                            `}>
+                              `}>
                   <ImageIcon size={22} className={isDragging ? 'text-gray-400' : 'text-gray-300'}/>
                   <span className='text-xs text-gray-400'>
                     클릭하거나 파일을 드래그하세요
@@ -200,8 +201,7 @@ const Insert = () => {
             
             {/* 파일 입력 */}
                  <input ref={ fileInputRef } type="file" accept='image/*' className='hidden'
-                   onChange={(e) => handleMainFile(e.target.files?.[0])}
-            />
+                   onChange={(e) => handleMainFile(e.target.files?.[0])}/>
           </div>
         </div>
 
@@ -226,8 +226,8 @@ const Insert = () => {
           type='button'
           className='px-4 py-2 w-full text-sm font-medium text-gray-700 bg-white border border-gray-200
             rounded-lg hover:bg-gray-50 transition-colors cursor-pointer'
-          >
-            취소
+            onClick={() => navigate('/boards')}
+          >취소
         </button>
         <button
           type='submit'

@@ -56,7 +56,19 @@ export const useBoardMutations = (id) => {
     // 단일 파일 삭제 remove: (id) => api.delete(`/files/${id}`),
     const deleteFileMutation = useMutation({
         mutationFn: (fileId) => filesApi.remove(fileId),
-        onSuccess: async () => {
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['board', id]})
+        }
+    })
+
+    // 파일 선택 삭제
+
+    // checked 여부 확인해야하지 않ㅇ르까..? 리스트로 묶어야하지 않을까..?
+    // => checked 여부는 update.jsx에서 하면 될듯?
+    
+    const deleteFilesMutation = useMutation({
+        mutationFn: (idList) => filesApi.removeFiles(idList),
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['board', id]})
         }
     })
@@ -65,6 +77,7 @@ export const useBoardMutations = (id) => {
         insertBoard: (data, headers) => insertMutation.mutate({ data, headers }),
         updateBoard: (data, headers) => updateMutation.mutate({ data, headers }),
         deleteFile : (fileId) => deleteFileMutation.mutate(fileId),
+        deleteFiles: (idList) => deleteFilesMutation.mutate(idList),
 
         // isPending : 서버로 요청 보낸 후, 응답 대기 상태
         isInserting: insertMutation.isPending,
