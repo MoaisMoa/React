@@ -140,7 +140,7 @@
   </delete>
 
   <!-- 타입별 파일 조회 -->
-  <select id="selectByType=" resultType="Files">
+  <select id="selectByType" resultType="Files">
     SELECT *
     FROM files
     WHERE p_id = #{pId}
@@ -149,7 +149,7 @@
   </select>
 
   <!-- 타입별 파일 조회 -->
-  <select id="listByType=" resultType="Files">
+  <select id="listByType" resultType="Files">
     SELECT *
     FROM files
     WHERE p_id = #{pId}
