@@ -1,8 +1,13 @@
 import React from 'react'
+import Layout from '../components/common/Layout'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <Layout>
+        <h1>Home</h1>
+        <hr />
+        <h2>메인 화면</h2>
+    </Layout>
   )
 }
 
