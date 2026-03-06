@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.aloha.login.security.contants.SecurityConstants;
+import com.aloha.login.security.constants.SecurityConstants;
 import com.aloha.login.security.provider.JwtProvider;
 
 import jakarta.servlet.FilterChain;

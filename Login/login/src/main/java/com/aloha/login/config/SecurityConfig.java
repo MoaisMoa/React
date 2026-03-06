@@ -14,17 +14,32 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.aloha.login.security.filter.JwtAuthenticationFilter;
+import com.aloha.login.security.filter.JwtRequestFilter;
+import com.aloha.login.security.provider.JwtProvider;
+import com.aloha.login.service.UserDetailServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity( prePostEnabled = true, securedEnabled = true )
 public class SecurityConfig {
+
+    private final JwtProvider jwtProvider;
+
+    private final UserDetailServiceImpl userDetailServiceImpl;
     // @Autowired private UserDetailServiceImpl userDetailServiceImpl;
     // @Autowired private JwtProvider jwtProvider;
-    private AuthenticationManager authenticationManager; // 인증관리
+    private AuthenticationManager authenticationManager;
+
+    SecurityConfig(UserDetailServiceImpl userDetailServiceImpl, JwtProvider jwtProvider) {
+        this.userDetailServiceImpl = userDetailServiceImpl;
+        this.jwtProvider = jwtProvider;
+    } // 인증관리
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -53,11 +68,11 @@ public class SecurityConfig {
             .anyRequest().permitAll()
         );
 
-        //여기는 일단 대기..
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtProvider);
+        JwtRequestFilter jwtRequestFilter = new JwtRequestFilter(authenticationManager, jwtProvider);
 
-        // http.userDetailsService( userDetailServiceImpl );
-        // http.addFilterAt( new JwtAuthenticationFilter(authenticationManager, jwtProvider), UsernamePasswordAuthenticationFilter.class )
-        //     .addFilterBefore(new JwtRequestFilter(authenticationManager, jwtProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt( jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class )
+            .addFilterBefore( jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

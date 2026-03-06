@@ -12,7 +12,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.aloha.login.security.contants.SecurityConstants;
+import com.aloha.login.domain.CustomUser;
+import com.aloha.login.domain.UserAuth;
+import com.aloha.login.domain.Users;
+import com.aloha.login.mapper.UserMapper;
+import com.aloha.login.security.constants.SecurityConstants;
 import com.aloha.login.security.props.JwtProps;
 
 import io.jsonwebtoken.Claims;

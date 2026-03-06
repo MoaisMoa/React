@@ -1,4 +1,4 @@
-package com.aloha.login.security.contants;
+package com.aloha.login.security.constants;
 
 public class SecurityConstants {
     public static final String TOKEN_HEADER = "Authorization";
