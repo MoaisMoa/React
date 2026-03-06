@@ -95,6 +95,8 @@ public class BoardServiceImpl implements BoardService {
     if( oldBoard != null ) {
       entity.setId(oldBoard.getId());
     }
+    // 새 메인 파일이 있으면 기존 메인 파일을 먼저 정리
+    replaceMainFileIfNeeded(entity);
     // 게시글 수정
     int result = boardMapper.update(entity);
     // 파일 업로드
@@ -104,11 +106,38 @@ public class BoardServiceImpl implements BoardService {
   
   @Override
   public boolean updateById(Boards entity) {
+    // 새 메인 파일이 있으면 기존 메인 파일을 먼저 정리
+    replaceMainFileIfNeeded(entity);
     // 게시글 수정
     int result = boardMapper.updateById(entity);
     // 파일 업로드
     result += upload(entity);
     return result > 0;  
+  }
+
+  private void replaceMainFileIfNeeded(Boards board) {
+    MultipartFile mainFile = board.getMainFile();
+    if( mainFile == null || mainFile.isEmpty() ) {
+      return;
+    }
+
+    String pId = board.getId();
+    if( pId == null || pId.isBlank() ) {
+      return;
+    }
+
+    Files query = new Files();
+    query.setPId(pId);
+    query.setType("MAIN");
+
+    List<Files> mainFileList = fileService.listByType(query);
+    if( mainFileList == null || mainFileList.isEmpty() ) {
+      return;
+    }
+
+    for (Files oldMainFile : mainFileList) {
+      fileService.deleteById(oldMainFile.getId());
+    }
   }
   
   @Override
