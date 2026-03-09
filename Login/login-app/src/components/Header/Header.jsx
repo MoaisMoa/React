@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 
 const Header = () => {
-    const { isLogin } = useAuth()
+    const { isLogin, logout } = useAuth()
 
     return (
         <header>
@@ -20,7 +20,7 @@ const Header = () => {
                         ?
                         <>
                             <li><Link to="/user">마이페이지</Link></li>
-                            <li><button className='btn'>로그아웃</button></li>
+                            <li><button className='btn' onClick={() => logout()}>로그아웃</button></li>
                         </>
                         :
                         <>

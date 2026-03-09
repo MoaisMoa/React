@@ -37,6 +37,15 @@ const LoginContextProvider = ({ children }) => {
     setRoles(parseRoles(userData.authList))
    }, [])
 
+    // 로그아웃 Setting
+   const logoutSetting = useCallback(() => {
+    setIsLogin(false)
+    setUserInfo(null)
+    Cookies.remove('jwt')
+    // 권한 Setting
+    setRoles(new Set())
+   }, [])
+
    // 로그인 요청 함수 정의
    const login = async (username, password) => {
     try {
@@ -87,13 +96,32 @@ const LoginContextProvider = ({ children }) => {
     }
    }, [loginSetting])
 
+   // 로그아웃
+   const logout = (force = false) => {
+    if(force) {
+        logoutSetting()
+        navigate('/')
+        return
+    }
+    Swal.confirm('로그아웃 하시겠습니까?','메인화면으로 이동합니다 ヾ(•ω•`)o','warning',
+        (reslut) => {
+            if(reslut.isConfirmed) {
+                Swal.alert('로그아웃 성공', '로그아웃 되었습니다.','success')
+                logoutSetting()
+                navigate('/')
+            }
+        }
+    )
+   }
+
+   // 마운트 시 자동 로그인
    useEffect(() => {
     autoLogin()
    }, [autoLogin])
 
   return (
     // Provider 정의
-    <LoginContext.Provider value={{ isLoading, isLogin, userInfo, roles, login, hasRole, hasAnyRole }}>
+    <LoginContext.Provider value={{ isLoading, isLogin, userInfo, roles, login, hasRole, hasAnyRole, logout }}>
         {children}
     </LoginContext.Provider>
   )
