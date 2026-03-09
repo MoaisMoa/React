@@ -61,7 +61,7 @@ public class UserController {
     }
 
     // 관리자 권한
-    @PreAuthorize(" hasRole('ROLE_ADMIN') or #user.username == authentication.name ")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #user.username == authentication.name")
     @PutMapping("")
     public ResponseEntity<?> update(@RequestBody Users user) throws Exception {
         boolean result = userService.update(user);
