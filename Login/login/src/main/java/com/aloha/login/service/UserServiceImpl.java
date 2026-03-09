@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.aloha.login.domain.UserAuth;
 import com.aloha.login.domain.Users;
@@ -58,10 +59,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean update(Users user) throws Exception {
-        // 비밀번호 암호화
+        // 비밀번호를 입력한 경우에만 암호화해서 변경한다.
         String password = user.getPassword();
-        String encodedPassword = passwordEncoder.encode(password);
-        user.setPassword(encodedPassword);
+        if (StringUtils.hasText(password)) {
+            String encodedPassword = passwordEncoder.encode(password);
+            user.setPassword(encodedPassword);
+        } else {
+            user.setPassword(null);
+        }
         int result = userMapper.update(user);
         return result > 0;
     }

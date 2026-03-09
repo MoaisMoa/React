@@ -1,11 +1,22 @@
 import React from 'react'
 import './UserForm.css'
 
-const UserForm = () => {
+const UserForm = ({userInfo, updateUser}) => {
+    const onUpdate = (e) => {
+        e.preventDefault()
+        const form = e.target
+        const username = form.username.value
+        const password = form.password.value
+        const name = form.name.value
+        const email = form.email.value
+
+        updateUser( {username, password, name, email} )
+    }
+
   return (
     <div className="form">
         <h2 className="login-title">회원 정보</h2>
-        <form className="login-form">
+        <form className="login-form" onSubmit={ (e) => onUpdate(e) }>
             {/* 아이디 */}
             <div>
                 <label htmlFor="username">username</label>
@@ -15,6 +26,7 @@ const UserForm = () => {
                        autoComplete='username'
                        required
                        readOnly
+                       defaultValue={ userInfo?.username }
                 />
             </div>
             {/* 비밀번호 */}
@@ -25,6 +37,7 @@ const UserForm = () => {
                        placeholder='password'
                        autoComplete='password'
                        required
+                       
                 />
             </div>
             {/* 이름 */}
@@ -35,6 +48,7 @@ const UserForm = () => {
                        placeholder='name'
                        autoComplete='name'
                        required
+                       defaultValue={ userInfo?.name }
                 />
             </div>
             {/* 이메일 */}
@@ -45,6 +59,7 @@ const UserForm = () => {
                        placeholder='email'
                        autoComplete='email'
                        required
+                       defaultValue={ userInfo?.email }
                 />
             </div>
             <button type='submit' className='btn btn--form btn-login'>정보 수정</button>
