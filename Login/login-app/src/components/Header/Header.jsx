@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 
 const Header = () => {
-    const { isLogin, logout } = useAuth()
+    const { isLogin, logout, hasRole } = useAuth()
 
     return (
         <header>
@@ -20,6 +20,7 @@ const Header = () => {
                         ?
                         <>
                             <li><Link to="/user">마이페이지</Link></li>
+                            { hasRole('ROLE_ADMIN')&& <li><Link to="/admin">관리자</Link></li>}
                             <li><button className='btn' onClick={() => logout()}>로그아웃</button></li>
                         </>
                         :
