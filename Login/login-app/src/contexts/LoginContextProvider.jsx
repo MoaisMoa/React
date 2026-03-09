@@ -15,11 +15,26 @@ const LoginContextProvider = ({ children }) => {
    
    const navigate = useNavigate()
 
-    // Login Setting
+   /*
+        권한 객체 리스트 파싱
+            - authList [{no, username, auth}] 이거를 
+              Set(auth) 이렇게
+            - ("ROLE_USER", ...)
+   */
+   const parseRoles = (authList) => {
+    if(!authList) return new Set()
+        return new Set(authList.map((obj) => obj.auth))
+   }
+    // 권한 확인
+    const hasRole = (role) => roles.has(role)
+    const hasAnyRole = (...roleList) => roleList.some((role) => roles.has(role))
+
+    // 로그인 Setting
    const loginSetting = useCallback((userData) => {
     setIsLogin(true)
     setUserInfo(userData)
     // 권한 Setting
+    setRoles(parseRoles(userData.authList))
    }, [])
 
    // 로그인 요청 함수 정의
@@ -78,7 +93,7 @@ const LoginContextProvider = ({ children }) => {
 
   return (
     // Provider 정의
-    <LoginContext.Provider value={{ isLoading, isLogin, userInfo, roles, login }}>
+    <LoginContext.Provider value={{ isLoading, isLogin, userInfo, roles, login, hasRole, hasAnyRole }}>
         {children}
     </LoginContext.Provider>
   )

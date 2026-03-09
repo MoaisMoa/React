@@ -7,9 +7,9 @@ import User from './pages/User'
 import About from './pages/About'
 import Admin from './pages/Admin'
 import LoginContextProvider from './contexts/LoginContextProvider'
+import ProtectedRoute from './components/common/ProtectedRoute'
 
 function App() {
-
   return (
     <BrowserRouter>
       <LoginContextProvider>
@@ -17,9 +17,23 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/join' element={<Join />} />
-          <Route path='/user' element={<User />} />
+          <Route
+            path='/user'
+            element={
+              <ProtectedRoute>
+                <User />
+              </ProtectedRoute>
+            }
+          />
           <Route path='/about' element={<About />} />
-          <Route path='/admin' element={<Admin />} />
+          <Route
+            path='/admin'
+            element={
+              <ProtectedRoute roles={['ROLE_ADMIN']}>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </LoginContextProvider>
     </BrowserRouter>
