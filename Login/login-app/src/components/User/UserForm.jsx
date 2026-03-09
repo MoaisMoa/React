@@ -1,7 +1,7 @@
 import React from 'react'
 import './UserForm.css'
 
-const UserForm = ({userInfo, updateUser}) => {
+const UserForm = ({userInfo, updateUser, deleteUser}) => {
     const onUpdate = (e) => {
         e.preventDefault()
         const form = e.target
@@ -63,7 +63,8 @@ const UserForm = ({userInfo, updateUser}) => {
                 />
             </div>
             <button type='submit' className='btn btn--form btn-login'>정보 수정</button>
-            <button className='btn btn--form btn-login'>회원 탈퇴</button>
+            <button className='btn btn--form btn-login'
+                    onClick={()=>deleteUser(userInfo?.username)}>회원 탈퇴</button>
         </form>
     </div>
   )
